@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="pers.movie_website.mapper.UserMapper">
+
+    <!--登录时候查找是否有此用户-->
+    <select id="selectUser" resultType="pers.movie_website.pojo.User" parameterType="pers.movie_website.pojo.User">
+        SELECT * from user_info where account_number = #{account_number} and pass_word = #{pass_word}
+    </select>
+
+    <select id="selectAdmin" resultType="pers.movie_website.pojo.User" parameterType="pers.movie_website.pojo.User">
+        SELECT * from user_admin where account_number = #{account_number} and pass_word = #{pass_word}
+    </select>
+
+    <!--注册时候查找是否有此用户-->
+    <select id="existsUser" resultType="pers.movie_website.pojo.User" parameterType="pers.movie_website.pojo.User">
+        SELECT * from user_info where account_number = #{account_number}
+    </select>
+
+    <!--查找是否有此用户,返回信息-->
+    <select id="existsUserFromStr" resultType="pers.movie_website.pojo.User" parameterType="map" >
+        SELECT * from user_info where account_number = #{account_number}
+    </select>
+
+    <select id="existsAdmin" resultType="pers.movie_website.pojo.User">
+        SELECT * from user_admin where account_number = #{account_number}
+    </select>
+
+
+    <!--插入用户信息-->
+    <insert id="insertUser" parameterType="pers.movie_website.pojo.User">
+        insert into user_info (account_number,pass_word) values(#{accountNumber},#{passWord})
+    </insert>
+
+    <insert id="inserMovie" parameterType="pers.movie_website.pojo.Movie">
+        insert into movie_info (name,movie_url,score,date,type) values(#{name},#{movie_url},#{score},#{date},#{type})
+    </insert>
+    <!-- 查询电影数量-->
+    <select id="selectMovieNum"  resultType="int">
+        SELECT count(*) from movie_info
+    </select>
+
+    <select id="selectUserNum"  resultType="int">
+        SELECT count(*) from user_info
+    </select>
+
+    <select id="selectMovieAll" parameterType="map"  resultType="pers.movie_website.pojo.Movie">
+        SELECT * from movie_info limit #{pageNum} , #{pageEnd}
+    </select>
+
+    <select id="selectMovieFromRowBounds"  resultType="pers.movie_website.pojo.Movie">
+        SELECT * from movie_info
+    </select>
+
+    <select id="selectMovieImg"  resultType="pers.movie_website.pojo.Movie">
+        SELECT * from movie_info where movie_img is null
+    </select>
+
+    <select id="selectMovie"  resultType="pers.movie_website.pojo.Movie">
+        SELECT * from movie_info
+    </select>
+
+    <update id="updateMovieImg" parameterType="pers.movie_website.pojo.Movie">
+        update movie_info set movie_img=#{movie_img} where name=#{name}
+    </update>
+
+    <select id="selectUserId" parameterType="map"  resultType="int">
+        SELECT id from user_info where account_number=#{account_number}
+    </select>
+
+    <select id="selectUserWatch" parameterType="pers.movie_website.pojo.User"  resultType="int">
+        SELECT mid from user_watch where uid=#{id}
+    </select>
+
+    <select id="seleceUserAndMovidWatch" parameterType="map"  resultType="int">
+        SELECT count(*) from user_watch where uid=#{userId} and mid=#{movieId}
+    </select>
+
+
+    <select id="selectMovieFromId" parameterType="int"  resultType="pers.movie_website.pojo.Movie">
+        SELECT * from movie_info where id=#{id}
+    </select>
+
+    <select id="selectMovieFromName" parameterType="map"  resultType="pers.movie_website.pojo.Movie">
+        SELECT * from movie_info where name=#{movieName}
+    </select>
+
+    <insert id="inserUserWatch" parameterType="map">
+        insert into user_watch (uid,mid,datetime) values(#{uid},#{mid},#{datetime})
+    </insert>
+
+    <update id="updateUserWatchDate" parameterType="map">
+        update user_watch set datetime=#{datetime} where uid=#{uid} and mid=#{mid}
+    </update>
+
+    <insert id="inserUserCollection" parameterType="map">
+        insert into user_collection (uid,mid,datetime) values(#{uid},#{mid},#{datetime})
+    </insert>
+
+    <select id="selectUserCollection" parameterType="map" resultType="int" >
+        SELECT count(*) from user_collection where uid=#{uid} and mid=#{mid}
+    </select>
+
+    <update id="updateUserCollection" parameterType="map">
+        update user_collection set datetime=#{datetime} where uid=#{uid} and mid=#{mid}
+    </update>
+
+    <select id="selectCollectionFromId" parameterType="map" resultType="int" >
+        SELECT mid from user_collection where uid=#{uid}
+    </select>
+
+    <delete id="deleteCollection" parameterType="map">
+        delete from user_collection where uid=#{uid} and  mid=#{mid}
+    </delete>
+
+    <delete id="deleteUser" parameterType="map">
+        delete from user_info where account_number=#{userName}
+    </delete>
+
+    <delete id="deleteMovie" parameterType="map">
+        delete from movie_info where name=#{movieName}
+    </delete>
+
+    <select id="selectMovieText"   resultType="pers.movie_website.pojo.Movie">
+        SELECT * from movie_info where movie_text is null
+    </select>
+
+    <update id="UpdateMovieText" parameterType="map">
+        update movie_info set movie_text=#{movieText} where id=#{movieId}
+    </update>
+
+    <insert id="inserUserRating" parameterType="map">
+        insert into user_rating (uid,mid,rating,datetime) values(#{uid},#{mid},#{movieRating},#{datetime})
+    </insert>
+
+    <select id="selectUserRating" parameterType="map" resultType="int" >
+        SELECT count(*) from user_rating where uid=#{uid} and mid=#{mid}
+    </select>
+
+    <select id="selectUserRatingFrom" parameterType="map" resultType="int" >
+        SELECT count(*) from user_rating where uid=#{uid}
+    </select>
+
+    <select id="selectBestMovieWatch" resultType="int" >
+        SELECT MID
+        FROM user_watch
+        GROUP BY MID
+        ORDER BY COUNT(MID)  DESC LIMIT 1
+    </select>
+
+    <select id="selectBestMovieWatchPie" resultType="pers.movie_website.pojo.MoviePie" >
+        SELECT COUNT(MID) AS 'value',MID AS 'name'
+        FROM user_watch
+        GROUP BY MID
+        ORDER BY COUNT(MID)  DESC LIMIT 5
+    </select>
+
+    <select id="selectBestMovieColl" resultType="int" >
+        SELECT MID
+        FROM user_collection
+        GROUP BY MID
+        ORDER BY COUNT(MID)  DESC LIMIT 1
+    </select>
+
+    <select id="selectBestMovieCollPie" resultType="pers.movie_website.pojo.MoviePie" >
+        SELECT COUNT(MID) AS 'value',MID AS 'name'
+        FROM user_collection
+        GROUP BY MID
+        ORDER BY COUNT(MID)  DESC LIMIT 5
+    </select>
+
+    <select id="selectAllRating" resultType="pers.movie_website.pojo.UserRating" >
+        SELECT * from user_rating
+    </select>
+
+
+    <select id="selectAllColl" resultType="pers.movie_website.pojo.UserRating" >
+        SELECT * from user_collection
+    </select>
+
+    <select id="selectRatingFromId" parameterType="map" resultType="pers.movie_website.pojo.UserRating" >
+        SELECT * from user_rating where uid=#{id}
+    </select>
+
+    <select id="selectAllMovieName" resultType="String">
+        SELECT NAME FROM movie_info
+    </select>
+
+
+
+
+    <!--    &lt;!&ndash;删除用户信息&ndash;&gt;-->
+<!--    <delete id="deleteUser" parameterType="java.lang.Integer">-->
+<!--        delete from user where id=#{id}-->
+<!--    </delete>-->
+<!--    &lt;!&ndash;更新用户信息&ndash;&gt;-->
+<!--    <update id="updateUser" parameterType="com.mvc.User">-->
+<!--        &lt;!&ndash; update user set name=#{name},password=#{password} where id=#{id} &ndash;&gt;-->
+<!--        update user-->
+<!--        <set>-->
+<!--            <if test="username != null && username != ''">username=#{username},</if>-->
+<!--            <if test="password != null && password != ''">password=#{password},</if>-->
+<!--        </set>-->
+<!--        where id= #{id}-->
+<!--    </update>-->
+
+</mapper>

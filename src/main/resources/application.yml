@@ -1,0 +1,28 @@
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/movie_website?useUnicode=true&characterEncoding=utf8
+    username: root
+    password: yyssql
+  redis:
+    port: 6379
+  servlet:
+    multipart:
+      max-file-size: 1MB
+      max-request-size: 10MB
+#  security:
+#    user:
+#      name: user
+#      pass: 123123
+server:
+  port: 8080
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  configuration:
+    map-underscore-to-camel-case: true
+#mybatis.type-aliases-package=com.example.myblog.mybatis.entity
+#kufcbjwt:
+#  header: Authorization
+#  expire: 604800 #7?????
+#  secret: 212wdseqw23red232r3rds23r21212hg  #??32?
+
+
